@@ -66,6 +66,7 @@ Webby is not limited to producing HTML. By no means! Do you ever get tired of re
 * rake
 * rspec
 * bones
+* loquacious
 
 == LICENSE:
 
