@@ -45,6 +45,11 @@ class AutoBuilder
     @watcher.glob = glob
 
     @web_server = ::Webby.site.use_web_server ? WebServer.new : nil
+
+    @launchy = ::Webby.site.autobuild_launch_url
+    unless @launchy
+      @launchy = "http://localhost:#{::Webby.site.web_port}" if @web_server
+    end
   end
 
   # call-seq:
@@ -89,8 +94,9 @@ class AutoBuilder
     if @web_server
       @web_server.start
       sleep 0.25
-      Launchy.open("http://localhost:#{::Webby.site.web_port}")
     end
+    # We may have a local server we didn't spin up
+    Launchy.open(@launchy) if @launchy
 
     @watcher.join
     @web_server.join if @web_server

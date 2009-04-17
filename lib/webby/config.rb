@@ -98,9 +98,22 @@ Loquacious.configuration_for(:webby) {
 
   desc <<-__
     Defines the port number the internal web server will use when the
-    autobuild loop is running.
+    autobuild loop is running.  Port number will be ignored if 
+    autobuild_launch_url is defined.
   __
   web_port 4331
+
+  desc <<-__
+    Defines the url that will be launched when running the autobuild
+    task.  This url will be launched regardless of the use_web_server
+    option and ignores the web_port setting.  Use this option if you
+    are not running the default server but still want your browser opened
+    automatically after an autobuild.  The web_port setting will be ignored.
+    Add the port setting to the autobuild_launch_url if needed.  If this 
+    option is not defined and use_web_server is true, autobuild will default
+    to launching: http://localhost::web_port/
+  __
+  autobuild_launch_url nil
 
   desc <<-__
     The username that will be used when publishing a site to the remote host.
