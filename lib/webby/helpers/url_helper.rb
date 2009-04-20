@@ -15,6 +15,7 @@ module UrlHelper
   # 
   # * <tt>:escape</tt> -- determines whether the returned URL will be HTML escaped or not (+true+ by default)
   # * <tt>:anchor</tt> -- specifies the anchor name to be appended to the path
+  # * <tt>:no_file_extension</tt> -- strips the file extension from the URL, useful for content negotiation
   #
   # ==== Examples
   #
@@ -35,9 +36,11 @@ module UrlHelper
     obj = args.first
 
     anchor = opts.delete(:anchor)
+    no_file_extension = opts.delete(:no_file_extension)
     escape = opts.has_key?(:escape) ? opts.delete(:escape) : true
 
     url = Webby::Resources::Resource === obj ? obj.url : obj.to_s
+    url = url.chomp(File.extname(url)) if no_file_extension
     url = escape_once(url) if escape
     url << "#" << anchor if anchor
 
