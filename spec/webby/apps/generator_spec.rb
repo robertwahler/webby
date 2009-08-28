@@ -77,10 +77,10 @@ describe Webby::Apps::Generator do
     h["layouts"].should == %w[layouts/default.txt]
     h["tasks"].should == %w[tasks/blog.rake]
     h["templates"].should == %w[templates/atom_feed.erb]
-    h["templates/blog"].should == [
-      "templates/blog/year.erb",
+    h["templates/blog"].sort.should == [
+      "templates/blog/month.erb",
       "templates/blog/post.erb",
-      "templates/blog/month.erb"
+      "templates/blog/year.erb"
     ]
   end
 
