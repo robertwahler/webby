@@ -126,23 +126,50 @@ class MetaFile
   def each
     return unless meta_data?
 
-    first, count = nil, 0
+    first = nil
+    count = 0
     @io.seek 0
 
-    buffer = @io.gets
-    while count < @meta_count
-      while (line = @io.gets) !~ META_SEP
+    # First pass, read all meta data to end of last 
+    # yaml marker "---" and place in string array "raw"
+    #
+    # This meta data block may have many documents
+    raw = []
+    while count < meta_end
+      raw << @io.gets
+      count += 1
+    end
+
+
+    # run the entire meta data block through ERB in the current context
+    b = binding
+    raw_erb_expanded = ERB.new(raw.to_s, nil, '-').result(b)
+
+    # convert erb back to an array of lines
+    expanded_meta_data = raw_erb_expanded.split("\n")
+    expanded_meta_data = expanded_meta_data.map do |d|
+      d + "\n"
+    end
+    expanded_meta_data_count = expanded_meta_data.size
+
+
+    # grap the first "---"
+    line = expanded_meta_data.shift
+    while !line.nil?
+      buffer = line 
+      # read down to next "---" and stop
+      while (line = expanded_meta_data.shift) !~ META_SEP
+        break if line.nil?
         buffer << line
       end
+       return if line.nil?
 
-      h = YAML.load(buffer)
+
+      h = yaml_load_erb(buffer)
       raise Error, ERR_MSG unless h.instance_of?(Hash)
 
       if first then h = first.merge(h)
       else first = h.dup end
-
-      buffer = line
-      count += 1
 
       yield h
     end
@@ -161,7 +188,12 @@ class MetaFile
     return if meta_end.nil?
 
     @io.seek 0
-    return YAML.load(@io)
+    buffer = @io.gets
+    while (line = @io.gets) !~ META_SEP
+      buffer << line
+    end
+
+    yaml_load_erb(buffer)
   end
 
   # Returns true if the IO stream contains meta-data. Returns false if the
@@ -203,6 +235,21 @@ class MetaFile
     return if pos.nil?
 
     @meta_end = pos
+  end
+
+  private
+
+  # take as input string or stream and return yaml with ERB evaluated
+  def yaml_load_erb(input)
+    
+    # run the yaml through ERB in the current context
+    b = binding
+    data = ERB.new(input, nil, '-').result(b)
+
+    # call load on yaml data string
+    result = YAML.load(data)
+
+    return result
   end
 
 end  # class MetaFile

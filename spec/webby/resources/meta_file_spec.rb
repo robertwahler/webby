@@ -28,6 +28,12 @@ describe Webby::Resources::MetaFile do
       mf = Webby::Resources::MetaFile.new(fd)
       mf.meta_count.should == 3
     end
+
+    fn = Webby.datapath %w[site content photos-erb.txt]
+    File.open(fn, 'r') do |fd|
+      mf = Webby::Resources::MetaFile.new(fd)
+      mf.meta_count.should == 1
+    end
   end
 
   it 'determines the end of the final meta-data block' do
@@ -41,6 +47,12 @@ describe Webby::Resources::MetaFile do
     File.open(fn, 'r') do |fd|
       mf = Webby::Resources::MetaFile.new(fd)
       mf.meta_end.should == 18
+    end
+
+    fn = Webby.datapath %w[site content photos-erb.txt]
+    File.open(fn, 'r') do |fd|
+      mf = Webby::Resources::MetaFile.new(fd)
+      mf.meta_end.should == 13
     end
   end
 
@@ -58,6 +70,24 @@ describe Webby::Resources::MetaFile do
         'First Photo',
         'Second Photo',
         'Third Photo'
+      ]
+      output.map {|h| h['directory']}.should == ['photos']*3
+      output.map {|h| h['filename']}.should == %w[image1 image2 image3]
+
+    end
+
+    it 'yields each meta-data block when blocks are created by ERB' do
+      fn = Webby.datapath %w[site content photos-erb.txt]
+      output = []
+      File.open(fn, 'r') do |fd|
+        mf = Webby::Resources::MetaFile.new(fd)
+        mf.each {|h| output << h}
+      end
+      output.length.should == 3
+      output.map {|h| h['title']}.should == [
+        'Photo 1',
+        'Photo 2',
+        'Photo 3'
       ]
       output.map {|h| h['directory']}.should == ['photos']*3
       output.map {|h| h['filename']}.should == %w[image1 image2 image3]
@@ -127,6 +157,17 @@ describe Webby::Resources::MetaFile do
         'filter'    => 'erb'
       }
     end
+
+    it 'processes ERB statements' do
+      fn = Webby.datapath %w[site content photos.txt]
+      File.open(fn, 'r') do |fd|
+        mf = Webby::Resources::MetaFile.new(fd)
+        mf.meta_count.should == 3
+        mf.meta_data["title"].should_not == '<%= "First" %> Photo'
+        mf.meta_data["title"].should == "First Photo"
+      end
+    end
+
   end
 
   # -----------------------------------------------------------------------

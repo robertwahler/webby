@@ -1,5 +1,5 @@
 ---
-title:       First Photo
+title:       <%= "First" %> Photo
 filename:    image1
 photo:       image1.jpg
 directory:   photos
