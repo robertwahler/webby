@@ -130,7 +130,12 @@ class Builder
     end
 
     ::Webby.load_files if opts[:load_files]
-
+    
+    # if any partials have changed, lets just go ahead and rebuild the site
+    Resources.partials.each do |partial|
+      opts[:rebuild] = true if partial.dirty?
+    end
+    
     Resources.pages.each do |page|
       unless page.dirty? or opts[:rebuild]
         journal.identical(page.destination) if verbose
