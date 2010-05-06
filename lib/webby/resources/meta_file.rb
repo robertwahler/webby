@@ -140,10 +140,9 @@ class MetaFile
       count += 1
     end
 
-
     # run the entire meta data block through ERB in the current context
     b = binding
-    raw_erb_expanded = ERB.new(raw.to_s, nil, '-').result(b)
+    raw_erb_expanded = ERB.new(raw.flatten.join, nil, '-').result(b)
 
     # convert erb back to an array of lines
     expanded_meta_data = raw_erb_expanded.split("\n")
