@@ -8,9 +8,10 @@ module Webby::Resources
 #
 class Resource
 
-  instance_methods.each do |m|
+  instance_methods.map { |m| m.to_s }.each do |m|
       undef_method(m) unless m =~ %r/\A__|\?$/ ||
-                             m == 'class'
+                             m == 'class' ||
+                             m == 'object_id'
   end
 
   # The full path to the resource file
