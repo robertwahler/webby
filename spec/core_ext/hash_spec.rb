@@ -8,10 +8,9 @@ describe Hash do
     h = {
       :one  => 1,
       :two  => 2,
-      3     => 'three',
-      [3,4] => :thirty_four
+      3     => 'three'
     }.stringify_keys
-    h.keys.sort.should == %w[3 34 one two]
+    h.keys.sort.should == %w[3 one two]
   end
 
   it "should symbolize keys" do

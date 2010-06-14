@@ -14,7 +14,9 @@ describe Webby::Renderer do
     @renderer = Webby::Renderer.new(@page)
   end
 
-  it 'needs some more specs'
+  it 'needs some more specs' do
+    pending
+  end
 
   # -------------------------------------------------------------------------
   describe 'when paginating' do
