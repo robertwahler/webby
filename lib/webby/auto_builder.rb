@@ -86,6 +86,7 @@ class AutoBuilder
     logger.info 'starting autobuild (Ctrl-C to stop)'
 
     Signal.trap('INT') {
+      puts "Autobuild is stopping, please wait..."
       @watcher.stop
       @web_server.stop if @web_server
     }
