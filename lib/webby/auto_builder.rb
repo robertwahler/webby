@@ -96,7 +96,12 @@ class AutoBuilder
       sleep 0.25
     end
     # We may have a local server we didn't spin up
-    Launchy.open(@launchy) if @launchy
+    launch_program = ::Webby.site.autobuild_launch_program
+    if launch_program 
+      `#{launch_program} #{@launchy}`
+    else
+      Launchy.open(@launchy) if @launchy
+    end
 
     @watcher.join
     @web_server.join if @web_server

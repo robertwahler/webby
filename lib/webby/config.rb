@@ -116,6 +116,12 @@ Loquacious.configuration_for(:webby) {
   autobuild_launch_url nil
 
   desc <<-__
+    Defines the program (ex: /usr/bin/firefox) that will be 
+    launched when running the autobuild task.    
+  __
+  autobuild_launch_program nil
+
+  desc <<-__
     The username that will be used when publishing a site to the remote host.
     Login to the remote host will take the form 'user@host' where both 'user'
     and 'host' are configuration options.
