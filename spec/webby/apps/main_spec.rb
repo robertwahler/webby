@@ -8,6 +8,16 @@ describe Webby::Apps::Main do
     @main = Webby::Apps::Main.new
   end
 
+  describe ".require_lib_files" do
+
+    it "should load lib/**/*.rb" do
+      defined?(Webby::Renderer::BreadcrumbsHelper).should == nil
+      @main.require_lib_files
+      defined?(Webby::Renderer::BreadcrumbsHelper).should == 'constant'
+    end
+
+  end
+  
   describe ".capture_command_line_args" do
     it "should set the raw arguments" do
       raw = ["The Raw Arguments"]

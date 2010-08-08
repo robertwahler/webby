@@ -178,11 +178,11 @@ class Main
   end
 
   def import_website_tasks
-    Dir.glob(::File.join(%w[. tasks *.rake])).sort.each {|fn| import fn}
+    Dir.glob(::File.join(%w[tasks *.rake])).sort.each {|fn| import File.expand_path(fn)}
   end
 
   def require_lib_files
-    Dir.glob(::File.join(%w[. lib ** *.rb])).sort.each {|fn| require fn}
+    Dir.glob(::File.join(%w[lib ** *.rb])).sort.each {|fn| require File.expand_path(fn)}
   end
 
   def capture_command_line_args(args)
