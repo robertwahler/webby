@@ -5,12 +5,12 @@ require File.expand_path(
 describe Webby::LinkValidator do
   before do
     @validator = Webby::LinkValidator.new
-    @@old = Webby.site.output_dir
+    @old = Webby.site.output_dir
     Webby.site.output_dir = Webby.datapath('html')
   end
 
   after do
-    Webby.site.output_dir = @@old
+    Webby.site.output_dir = @old
   end
 
   describe ".validate" do

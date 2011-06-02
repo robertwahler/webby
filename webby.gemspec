@@ -31,7 +31,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<logging>, [">= 0.9.7"])
       s.add_runtime_dependency(%q<loquacious>, [">= 1.3.0"])
       s.add_runtime_dependency(%q<rake>, [">= 0.8.4"])
-      s.add_runtime_dependency(%q<rspec>, [">= 1.2.2"])
+      s.add_runtime_dependency(%q<rspec>, [">= 2.0.0"])
       s.add_development_dependency(%q<bones>, [">= 2.5.0"])
     else
       s.add_dependency(%q<directory_watcher>, [">= 1.1.2"])
@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<logging>, [">= 0.9.7"])
       s.add_dependency(%q<loquacious>, [">= 1.3.0"])
       s.add_dependency(%q<rake>, [">= 0.8.4"])
-      s.add_dependency(%q<rspec>, [">= 1.2.2"])
+      s.add_dependency(%q<rspec>, [">= 2.0.0"])
       s.add_dependency(%q<bones>, [">= 2.5.0"])
     end
   else
@@ -50,7 +50,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<logging>, [">= 0.9.7"])
     s.add_dependency(%q<loquacious>, [">= 1.3.0"])
     s.add_dependency(%q<rake>, [">= 0.8.4"])
-    s.add_dependency(%q<rspec>, [">= 1.2.2"])
+    s.add_dependency(%q<rspec>, [">= 2.0.0"])
     s.add_dependency(%q<bones>, [">= 2.5.0"])
   end
 end

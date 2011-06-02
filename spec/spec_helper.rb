@@ -12,14 +12,14 @@ rescue LoadError
 end
 
 require 'fileutils'
-require 'spec'
+require 'rspec'
 require 'spec/logging_helper'
 
 dir = File.expand_path(File.dirname(__FILE__))
 require File.join(dir, %w[.. lib webby])
 Dir.glob(File.join(dir, %w[helpers *_helper.rb])).each {|fn| require fn}
 
-Spec::Runner.configure do |config|
+RSpec.configure do |config|
   include Spec::LoggingHelper
   include WebbyHelper
 
