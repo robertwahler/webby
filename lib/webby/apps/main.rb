@@ -4,7 +4,7 @@ require 'rake'
 module Webby::Apps
 
 class Main
-
+  include Rake::DSL if defined?(Rake::DSL)
   # Create a new instance of Main, and run the +webby+ application given the
   # command line _args_.
   #
