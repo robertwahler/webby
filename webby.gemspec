@@ -1,6 +1,21 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
+  # avoid shelling out to run git every time the gemspec is evaluated
+  #
+  # @see spec/gemspec_spec.rb
+  #
+  gemfiles_cache = File.join(File.dirname(__FILE__), '.gemfiles')
+  if File.exists?(gemfiles_cache)
+    gemfiles = File.open(gemfiles_cache, "r") {|f| f.read}
+    # normalize EOL
+    gemfiles.gsub!(/\r\n/, "\n")
+  else
+    # .gemfiles missing, run 'rake gemfiles' to create it
+    # falling back to 'git ls-files'"
+    gemfiles = `git ls-files`
+  end
+
   s.name = %q{webby}
   s.version = "0.9.4.1"
 
@@ -17,40 +32,17 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--main", "README.rdoc"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{webby}
-  s.rubygems_version = %q{1.3.1}
   s.summary = %q{Awesome static website creation and management!}
+  s.required_rubygems_version = ">= 1.3.6"
 
-  if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 2
+  s.add_dependency "hpricot", ">= 0.6.0"
+  s.add_dependency "loquacious", ">= 1.3.0"
+  s.add_dependency "rake", ">= 0.8.7"
+  s.add_dependency "directory_watcher", ">= 1.1.2"
+  s.add_dependency "launchy", ">= 0.3.2"
+  s.add_dependency "logging", ">= 0.9.7"
 
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<directory_watcher>, [">= 1.1.2"])
-      s.add_runtime_dependency(%q<hpricot>, [">= 0.6.0"])
-      s.add_runtime_dependency(%q<launchy>, [">= 0.3.2"])
-      s.add_runtime_dependency(%q<logging>, [">= 0.9.7"])
-      s.add_runtime_dependency(%q<loquacious>, [">= 1.3.0"])
-      s.add_runtime_dependency(%q<rake>, [">= 0.8.4"])
-      s.add_runtime_dependency(%q<rspec>, [">= 2.0.0"])
-      s.add_development_dependency(%q<bones>, [">= 2.5.0"])
-    else
-      s.add_dependency(%q<directory_watcher>, [">= 1.1.2"])
-      s.add_dependency(%q<hpricot>, [">= 0.6.0"])
-      s.add_dependency(%q<launchy>, [">= 0.3.2"])
-      s.add_dependency(%q<logging>, [">= 0.9.7"])
-      s.add_dependency(%q<loquacious>, [">= 1.3.0"])
-      s.add_dependency(%q<rake>, [">= 0.8.4"])
-      s.add_dependency(%q<rspec>, [">= 2.0.0"])
-      s.add_dependency(%q<bones>, [">= 2.5.0"])
-    end
-  else
-    s.add_dependency(%q<directory_watcher>, [">= 1.1.2"])
-    s.add_dependency(%q<hpricot>, [">= 0.6.0"])
-    s.add_dependency(%q<launchy>, [">= 0.3.2"])
-    s.add_dependency(%q<logging>, [">= 0.9.7"])
-    s.add_dependency(%q<loquacious>, [">= 1.3.0"])
-    s.add_dependency(%q<rake>, [">= 0.8.4"])
-    s.add_dependency(%q<rspec>, [">= 2.0.0"])
-    s.add_dependency(%q<bones>, [">= 2.5.0"])
-  end
+  s.add_development_dependency "bundler", ">= 1.0.14"
+  s.add_development_dependency "rspec", ">= 2.6.0"
+
 end

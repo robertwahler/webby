@@ -1,57 +1,46 @@
+# encoding: utf-8
 
-begin
-  require 'bones'
-rescue LoadError
-  abort '### please install the "bones" gem ###'
+# Bundler is managing $LOAD_PATH, any gem needed by this Rakefile must be
+# listed as a development dependency in the gemspec
+require 'bundler/setup'
+require 'bundler/gem_tasks'
+
+require 'rspec/core/rake_task'
+desc "Run RSpec"
+RSpec::Core::RakeTask.new do |spec|
+  spec.pattern = 'spec/**/*_spec.rb'
+  spec.rspec_opts = ['--color', '--format nested']
 end
 
-ensure_in_path 'lib'
-require 'webby'
+task :default => :spec
 
-task :default => 'spec:specdoc'
+# put the gemfiles task in the bundler dependency chain
+task :build => [:gemfiles]
+task :install => [:gemfiles]
+task :release => [:gemfiles]
 
-Bones {
-  name 'webby'
-  summary 'Awesome static website creation and management!'
-  authors 'Tim Pease'
-  email 'tim.pease@gmail.com'
-  url 'http://webby.rubyforge.org/'
-  version Webby::VERSION
-  readme_file 'README.rdoc'
-  ignore_file '.gitignore'
-  rubyforge.name 'webby'
+desc "Generate .gemfiles via 'git ls-files'"
+task :gemfiles do
+  files = `git ls-files`
 
-  ruby_opts %w[-W0]
-  exclude << %w(^webby.gemspec$)
+  filename  = File.join(File.dirname(__FILE__), '.gemfiles')
+  cached_files = nil
+  if File.exists?(filename)
+    puts ".gemfiles exists, reading..."
+    cached_files = File.open(filename, "rb") {|f| f.read}
+  end
 
-  rdoc.dir 'doc/rdoc'
-  rdoc.remote_dir 'rdoc'
-  rdoc.exclude << %w(^examples)
-  rdoc.include << readme_file
+  if cached_files && cached_files.match("\r\n")
+    puts ".gemfiles using DOS EOL"
+    files.gsub!(/\n/, "\r\n")
+  end
 
-  spec.opts << '--color'
+  if cached_files != files
+    puts ".gemfiles updating"
+    File.open(filename, 'wb') {|f| f.write(files)}
+  else
+    puts ".gemfiles update not required"
+  end
 
-  use_gmail
-  ann.email.to << 'webby-forum@googlegroups.com'
-  ann.text = <<-ANN
-== POST SCRIPT
-
-Visit the Webby forum to chat with other Webby-Heads:
-http://groups.google.com/group/webby-forum
-
-Blessings,
-TwP
-ANN
-
-  depend_on 'directory_watcher'
-  depend_on 'hpricot'
-  depend_on 'launchy'
-  depend_on 'logging'
-  depend_on 'loquacious'
-  depend_on 'rake'
-
-  depend_on 'rspec', :development => true
-  depend_on 'bones-git', :development => true
-  depend_on 'bones-extras', :development => true
-}
-
+  raise "unable to process .gemfiles" unless files
+end
