@@ -1,3 +1,4 @@
+.gemfiles
 .gitignore
 Gemfile
 Gemfile.lock
